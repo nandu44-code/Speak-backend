@@ -34,13 +34,11 @@ class CustomUser(AbstractUser):
     otp = models.IntegerField(default=0)
     is_verified = models.BooleanField(default=False)
     
-
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-
     
     class Meta:
         verbose_name='CustomUser'
