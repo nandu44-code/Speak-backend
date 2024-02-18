@@ -33,6 +33,8 @@ class CustomUser(AbstractUser):
                              blank=True,null=True)
     otp = models.IntegerField(default=0)
     is_verified = models.BooleanField(default=False)
+    is_tutor=models.BooleanField(default=False)
+    is_student=models.BooleanField(default=False)
     
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -47,3 +49,12 @@ class CustomUser(AbstractUser):
 
     groups = models.ManyToManyField('auth.Group', related_name='custom_user_set', blank=True)
     user_permissions = models.ManyToManyField('auth.Permission', related_name='custom_user_set', blank=True)
+
+
+class Tutor(CustomUser):
+    state = models.CharField(max_length=45)
+    country = models.CharField(max_length=45)
+    introduction_video = models.URLField(blank=True)
+    introduction_description = models.CharField(max_length=250)
+    teaching_style = models.CharField(max_length=100)
+    total_sessions = models.IntegerField()
