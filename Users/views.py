@@ -4,39 +4,33 @@ from .models import CustomUser
 from .serializers import UserRegistrationSerializer,UserSerializer
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-# from rest_framework_simplejwt.tokens import RefreshToken
-
-# views.py
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()  # Define queryset for UserViewSet
+    queryset = CustomUser.objects.all()  
     serializer_class = UserSerializer
 
 class UserRegistrationViewSet(viewsets.ModelViewSet):
-    # print("hellow there")
+
     queryset = CustomUser.objects.none() 
     serializer_class = UserRegistrationSerializer
 
-# class UserLoginViewSet(viewsets.ViewSet):
-#     permission_classes = [permissions.AllowAny]
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        print("starting")
+        token = super().get_token(user)
 
-#     def create(self, request):
-#         serializer = UserLoginSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
+        # Add custom claims
+        token["user"] = user.id
+        token["is_tutor"] = user.is_tutor
+        token["is_student"] = user.is_student
+        token["is_superuser"] = user.is_superuser
+        # ...
+        print("ending")
 
-#         email = serializer.validated_data.get('email')
-#         password = serializer.validated_data.get('password')
-
-#         # Authenticate user
-#         user = authenticate(email=email, password=password)
-
-#         if user:
-#             # Generate JWT tokens
-#             refresh = RefreshToken.for_user(user)
-#             return Response({
-#                 'email': CustomUser.email,
-#                 'access_token': str(refresh.access_token),
-#                 'refresh_token': str(refresh)
-#             }, status=status.HTTP_200_OK)
-#         else:
-#             return Response({'error': 'Invalid username or password'},status=status.HTTP_400_BAD_REQUEST)
+        return token
+class CustomTokenObtainPairView(TokenObtainPairView):
+    
+    serializer_class = CustomTokenObtainPairSerializer
