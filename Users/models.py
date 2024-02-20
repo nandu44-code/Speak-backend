@@ -52,7 +52,8 @@ class CustomUser(AbstractUser):
     user_permissions = models.ManyToManyField('auth.Permission', related_name='custom_user_set', blank=True)
 
 
-class Tutor(CustomUser):
+class Tutor(models.Model):
+    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     state = models.CharField(max_length=45)
     country = models.CharField(max_length=45)
     introduction_video = models.URLField(blank=True)
