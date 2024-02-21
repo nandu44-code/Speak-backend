@@ -29,7 +29,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["is_superuser"] = user.is_superuser
         # ...
         print("ending")
-
         return token
 class CustomTokenObtainPairView(TokenObtainPairView):
     
