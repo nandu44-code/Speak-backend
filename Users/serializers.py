@@ -16,10 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
         
-    def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
-        if password:
-            instance.set_password(password)
+    def partial_update(self, instance, validated_data):
+      
         return super().update(instance, validated_data)
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

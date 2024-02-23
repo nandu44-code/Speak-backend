@@ -28,7 +28,7 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     
-    profile_image = models.ImageField(blank=True)
+    profile_image = models.TextField(blank=True)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=20, unique=True, verbose_name='username',
                              blank=True,null=True)
@@ -60,3 +60,5 @@ class Tutor(models.Model):
     introduction_description = models.CharField(max_length=250)
     teaching_style = models.CharField(max_length=100)
     total_sessions = models.IntegerField()
+
+

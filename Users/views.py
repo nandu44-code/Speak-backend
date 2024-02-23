@@ -11,6 +11,8 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()  
     serializer_class = UserSerializer
 
+    # def update
+
 class UserRegistrationViewSet(viewsets.ModelViewSet):
 
     queryset = CustomUser.objects.none() 
