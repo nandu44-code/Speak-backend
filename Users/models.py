@@ -60,5 +60,5 @@ class Tutor(models.Model):
     introduction_description = models.CharField(max_length=250)
     teaching_style = models.CharField(max_length=100)
     total_sessions = models.IntegerField()
-    certificates = models.TextField
+    certificates = models.TextField(blank=True)
 
