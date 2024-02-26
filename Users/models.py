@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 # Create your models here.
 
@@ -60,5 +61,9 @@ class Tutor(models.Model):
     introduction_description = models.CharField(max_length=250)
     teaching_style = models.CharField(max_length=100)
     total_sessions = models.IntegerField()
-    certificates = models.TextField(blank=True)
+    certificates = ArrayField(
+        models.URLField(max_length=200),
+        default=list,
+        blank=True
+    )
 

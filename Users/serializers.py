@@ -1,4 +1,4 @@
-from .models import CustomUser
+from .models import CustomUser,Tutor
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -29,6 +29,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
         return user
+
+
+class TutorInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tutor
+        fields = '__all__'
+
 
 # class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 #     @classmethod
