@@ -37,6 +37,12 @@ class TutorInfoSerializer(serializers.ModelSerializer):
         model = Tutor
         fields = '__all__'
 
+class CombinedUserSerializer(serializers.ModelSerializer):
+    tutor = TutorInfoSerializer()
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'profile_image', 'tutor']
 
 # class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 #     @classmethod
