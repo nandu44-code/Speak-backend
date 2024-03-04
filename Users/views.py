@@ -21,6 +21,8 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.none() 
     serializer_class = UserRegistrationSerializer
 
+   
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

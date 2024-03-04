@@ -28,4 +28,5 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/<int:user_id>/', CustomUserTutorDetailView.as_view(), name='user-detail')
     
+    
 ]
