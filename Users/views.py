@@ -9,6 +9,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from .utils import generate_otp
+from .tasks import send_otp
 
 @permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,7 +23,21 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.none() 
     serializer_class = UserRegistrationSerializer
 
-   
+    def create(self,request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        try:
+            otp = generate_otp()
+            print(otp)
+            user.otp=otp
+            user.save()
+        except exception as e:
+            print(e)
+
+        send_otp(user.email, otp)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
