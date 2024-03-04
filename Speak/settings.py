@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'Speak.urls'
 
 TEMPLATES = [
@@ -169,3 +170,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nanduganeshnair4444@gmail.com'
 EMAIL_HOST_PASSWORD = 'easp xxqi lfzr kayf' 
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # or 'django.contrib.sessions.backends.cache' or other backends
+SESSION_COOKIE_AGE = 1209600
