@@ -5,6 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 # from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 class UserSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(write_only=True)
     class Meta:
         model = CustomUser
         fields = '__all__'
@@ -18,6 +20,12 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
         
     def partial_update(self, instance, validated_data):
+        print('updatinggg')
+        password = validated_data.get('password')
+        if 'password' in validated_data:
+
+            print('password is in validated data')
+            instance.set_password(validated_data['password'])
       
         return super().update(instance, validated_data)
 
@@ -50,16 +58,7 @@ class OtpValidationSerializer(serializers.Serializer):
     otp = serializers.IntegerField()
 
 
-# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#         # Add custom claims to the token, if needed
-#         token['username'] = user.username
-#         token['is_superuser'] = user.is_superuser
-#         token['is_tutor'] = user.is_tutor
-#         token['is_student'] = user.is_student
-#         return token
 
-# class CustomTokenRefreshSerializer(TokenRefreshSerializer):
-#     pass
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(required = True)
+    

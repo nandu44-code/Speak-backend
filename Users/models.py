@@ -38,6 +38,7 @@ class CustomUser(AbstractUser):
     is_tutor=models.BooleanField(default=False)
     is_student=models.BooleanField(default=False)
     is_approved=models.BooleanField(default=False)
+    is_rejected=models.BooleanField(default=False)
     
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -63,4 +64,5 @@ class Tutor(models.Model):
     teaching_style = models.CharField(max_length=100)
     certificates = models.TextField(blank=True)
     is_approved = models.BooleanField(default=False)
+    
 
