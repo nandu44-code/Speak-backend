@@ -51,13 +51,11 @@ class CombinedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'profile_image', 'tutor']
+        fields = ['id', 'username', 'email', 'profile_image', 'last_name', 'first_name', 'tutor']
 
 
 class OtpValidationSerializer(serializers.Serializer):
     otp = serializers.IntegerField()
-
-
 
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required = True)
