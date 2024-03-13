@@ -60,6 +60,7 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
         print(request.session['useremail'])
         print('items in session',request.session.items())
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
     def validate_otp(self,request,*args,**kwargs):
         print("starting validate otp")
@@ -128,3 +129,10 @@ class CustomUserTutorDetailView(APIView):
             return Response(serializer.data)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found"}, status=404)
+
+class TutorListView(APIView):
+    def get(self, request):
+        users = CustomUser.objects.filter(is_approved=True,is_tutor=True)
+        serializer = CombinedUserSerializer(users, many=True)
+
+        return Response(serializer.data)

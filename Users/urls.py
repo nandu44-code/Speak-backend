@@ -8,7 +8,8 @@ from .views import (
     UserRegistrationViewSet,
     CustomTokenObtainPairView,
     TutorInfoViewSet,
-    CustomUserTutorDetailView
+    CustomUserTutorDetailView,
+    TutorListView
     )
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -28,6 +29,7 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/<int:user_id>/', CustomUserTutorDetailView.as_view(), name='user-detail'),
     path('register/', UserRegistrationViewSet.as_view({'post': 'create'}), name='user-registration'),
+    path('tutors/', TutorListView.as_view(), name='tutor_list'),
     path('validate-otp/', UserRegistrationViewSet.as_view({'post': 'validate_otp'}), name='validate-otp'),
     path('change-password/', UserViewSet.as_view({'post': 'change_password'}), name='user-change-password')
           
