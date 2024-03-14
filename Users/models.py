@@ -66,3 +66,8 @@ class Tutor(models.Model):
     is_approved = models.BooleanField(default=False)
     
 
+class Slot(models.Model):
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE)
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
