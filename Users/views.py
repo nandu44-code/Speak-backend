@@ -108,7 +108,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             token["is_tutor"] = user.is_tutor
             token["is_student"] = user.is_student
             token["is_superuser"] = user.is_superuser
-
+            token["is_approved"] = user.is_approved
+            token["is_rejected"] = user.is_rejected
             return token
         else:
             raise Exception('User is not verified')
