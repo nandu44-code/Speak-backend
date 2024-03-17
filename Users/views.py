@@ -1,13 +1,15 @@
 from rest_framework import viewsets,permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import CustomUser,Tutor
+from .models import CustomUser,Tutor,Slot
 from .serializers import (UserRegistrationSerializer,
                           UserSerializer,
                           TutorInfoSerializer,
                           CombinedUserSerializer,
                           OtpValidationSerializer,
-                          ChangePasswordSerializer)
+                          ChangePasswordSerializer,
+                          SlotSerializer
+                        )
 
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
@@ -103,13 +105,16 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if user.is_verified:
 
             token = super().get_token(user)
-
             token["user"] = user.id
             token["is_tutor"] = user.is_tutor
             token["is_student"] = user.is_student
             token["is_superuser"] = user.is_superuser
             token["is_approved"] = user.is_approved
             token["is_rejected"] = user.is_rejected
+            if user.is_tutor:
+                tutor = Tutor.objects.get(user=user)
+                token["tutor"] = tutor.id
+               
             return token
         else:
             raise Exception('User is not verified')
@@ -137,3 +142,7 @@ class TutorListView(APIView):
         serializer = CombinedUserSerializer(users, many=True)
 
         return Response(serializer.data)
+
+class SlotViewSet(viewsets.ModelViewSet):
+    queryset = Slot.objects.all()
+    serializer_class = SlotSerializer

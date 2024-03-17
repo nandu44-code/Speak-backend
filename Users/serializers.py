@@ -1,4 +1,4 @@
-from .models import CustomUser,Tutor
+from .models import CustomUser,Tutor,Slot
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -60,3 +60,7 @@ class OtpValidationSerializer(serializers.Serializer):
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required = True)
     
+class SlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slot
+        fields = ['id', 'tutor', 'date', 'start_time', 'end_time']

@@ -1,15 +1,16 @@
-# urls.py
 from django.urls import (
     path,
     include
     )
+
 from .views import (
     UserViewSet,
     UserRegistrationViewSet,
     CustomTokenObtainPairView,
     TutorInfoViewSet,
     CustomUserTutorDetailView,
-    TutorListView
+    TutorListView,
+    SlotViewSet,
     )
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -21,6 +22,7 @@ router = DefaultRouter()
 router.register('users', UserViewSet)
 # router.register('register', UserRegistrationViewSet, basename='register')
 router.register('tutor/register', TutorInfoViewSet, basename='tutor/register')
+router.register('tutor/slots', SlotViewSet)
 
 
 urlpatterns = [

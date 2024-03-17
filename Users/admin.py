@@ -4,3 +4,4 @@ from .models import *
 # Register your models here.
 admin.site.register(CustomUser)
 admin.site.register(Tutor)
+admin.site.register(Slot)
