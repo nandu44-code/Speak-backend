@@ -99,6 +99,8 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
 
             return Response ({'Detail':'Invalid OTP'}, status= status.HTTP_400_BAD_REQUEST)
 
+    
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
