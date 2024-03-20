@@ -145,6 +145,3 @@ class TutorListView(APIView):
 
         return Response(serializer.data)
 
-class SlotViewSet(viewsets.ModelViewSet):
-    queryset = Slot.objects.all()
-    serializer_class = SlotSerializer

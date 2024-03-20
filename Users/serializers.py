@@ -60,7 +60,3 @@ class OtpValidationSerializer(serializers.Serializer):
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required = True)
     
-class SlotSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Slot
-        fields = ['id', 'tutor', 'date', 'start_time', 'end_time']
