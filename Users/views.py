@@ -1,14 +1,13 @@
 from rest_framework import viewsets,permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import CustomUser,Tutor,Slot
+from .models import CustomUser,Tutor
 from .serializers import (UserRegistrationSerializer,
                           UserSerializer,
                           TutorInfoSerializer,
                           CombinedUserSerializer,
                           OtpValidationSerializer,
-                          ChangePasswordSerializer,
-                          SlotSerializer
+                          ChangePasswordSerializer
                         )
 
 from rest_framework.response import Response

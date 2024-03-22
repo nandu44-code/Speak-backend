@@ -1,4 +1,4 @@
-from .models import CustomUser,Tutor,Slot
+from .models import CustomUser,Tutor
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
