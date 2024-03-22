@@ -9,8 +9,7 @@ from .views import (
     CustomTokenObtainPairView,
     TutorInfoViewSet,
     CustomUserTutorDetailView,
-    TutorListView,
-    SlotViewSet,
+    TutorListView
     )
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -22,7 +21,7 @@ router = DefaultRouter()
 router.register('users', UserViewSet)
 # router.register('register', UserRegistrationViewSet, basename='register')
 router.register('tutor/register', TutorInfoViewSet, basename='tutor/register')
-router.register('tutor/slots', SlotViewSet)
+
 
 
 urlpatterns = [
