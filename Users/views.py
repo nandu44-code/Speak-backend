@@ -1,5 +1,6 @@
 from rest_framework import viewsets,permissions, status
 from rest_framework.views import APIView
+from rest_framework import generics,filters
 from rest_framework.response import Response
 from .models import CustomUser,Tutor
 from .serializers import (UserRegistrationSerializer,
@@ -9,7 +10,7 @@ from .serializers import (UserRegistrationSerializer,
                           OtpValidationSerializer,
                           ChangePasswordSerializer
                         )
-
+from django.db.models import Q
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -141,8 +142,13 @@ class CustomUserTutorDetailView(APIView):
 
 class TutorListView(APIView):
     def get(self, request):
-        users = CustomUser.objects.filter(is_approved=True,is_tutor=True)
+        users = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
         serializer = CombinedUserSerializer(users, many=True)
 
         return Response(serializer.data)
 
+class SearchTutorView(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
+    serializer_class = CombinedUserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username' , 'first_name', 'last_name'] 
