@@ -99,8 +99,6 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
 
             return Response ({'Detail':'Invalid OTP'}, status= status.HTTP_400_BAD_REQUEST)
 
-    
-
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -147,7 +145,7 @@ class TutorListView(APIView):
 
         return Response(serializer.data)
 
-class SearchTutorView(generics.ListCreateAPIView):
+class SearchTutorView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
