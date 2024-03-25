@@ -113,9 +113,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             token["is_approved"] = user.is_approved
             token["is_rejected"] = user.is_rejected
             if user.is_tutor:
-                tutor = Tutor.objects.get(user=user)
-                token["tutor"] = tutor.id
-               
+                try:
+                    tutor = Tutor.objects.get(user=user)
+                    token["tutor"] = tutor.id
+                except:
+                    pass 
             return token
         else:
             raise Exception('User is not verified')
