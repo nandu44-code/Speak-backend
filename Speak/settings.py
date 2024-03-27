@@ -179,3 +179,7 @@ EMAIL_HOST_PASSWORD = 'easp xxqi lfzr kayf'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # or 'django.contrib.sessions.backends.cache' or other backends
 SESSION_COOKIE_AGE = 1209600
 SESSION_SAVE_EVERY_REQUEST = True
+
+#payment secret key
+
+STRIPE_SECRET_KEY = "sk_test_51OyYZZSIzPDWknsQeknrLpFLbq9TPz4HOaZbMDkoEsOUhNUoU64lbNTuJr6KD8PLmxzxcHOzUK4RwQ3qlmk41nyb00BRRqegoK"
