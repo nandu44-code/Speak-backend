@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Slots
+from .models import Slots,Booking
 from datetime import timedelta , datetime
 
 class SlotSerializer(serializers.ModelSerializer):
@@ -45,4 +45,9 @@ class SlotSerializer(serializers.ModelSerializer):
 class SlotFilterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Slots
+        fields = '__all__'
+
+class BookingSerializer(serializers.MOdelSerializer):
+    class Meta:
+        model = Booking
         fields = '__all__'
