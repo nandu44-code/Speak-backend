@@ -32,8 +32,14 @@ class SlotFilterView(generics.ListAPIView):
 
 
     def get_queryset(self):
-        user = self.request.query_params.get('created_by')
+        user = self.request.query_params.get('user')
+        print(user)
         selected_date = self.request.query_params.get('selected_date')
+        print(selected_date)
+        print('hooyyyyyyyyyyyyym,hjjjjjjjjjjjjjjjjjjjjjjjhhkh')
+        slotss = Slots.objects.filter(created_by=user, start_date=selected_date)
+        for i in slotss:
+            print(i)
         if selected_date:
             return Slots.objects.filter(created_by=user, start_date=selected_date)
         else:
