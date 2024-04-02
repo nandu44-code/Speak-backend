@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from .models import Slots,Booking
+from Users.models import CustomUser
 from datetime import timedelta , datetime
 
 class SlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Slots
-        fields = ('id','user', 'start_date', 'end_date', 'start_time', 'end_time')
+        fields = ('id','created_by', 'start_date', 'end_date', 'start_time', 'end_time')
 
     def validate(self, attrs):
         start_date = attrs.get('start_date')
@@ -22,7 +23,9 @@ class SlotSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = self.context['request'].user 
+        user_id = validated_data.pop('created_by')
+        print(user_id)
+        user = CustomUser.objects.get(email=user_id)         
         print(user)
         slots = []
         current_date = validated_data['start_date']
@@ -30,7 +33,7 @@ class SlotSerializer(serializers.ModelSerializer):
             current_datetime = datetime.combine(current_date, validated_data['start_time'])
             while current_datetime.time() < validated_data['end_time']:
                 slot = Slots(
-                    user = user,
+                    created_by = user,
                     start_time=current_datetime.time(),
                     end_time=(current_datetime + timedelta(hours=1)).time(),
                     start_date=current_datetime.date(),
@@ -47,7 +50,7 @@ class SlotFilterSerializer(serializers.ModelSerializer):
         model = Slots
         fields = '__all__'
 
-class BookingSerializer(serializers.MOdelSerializer):
+class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = '__all__'

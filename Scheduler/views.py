@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import request
-from rest_framework import generics,status
+from rest_framework import generics,status,viewsets
 from rest_framework.response import Response
-from .models import Slots
-from .serializers import SlotSerializer,SlotFilterSerializer
+from .models import Slots,Booking
+from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer
 from dateutil.rrule import rrulestr
 import datetime
 # Create your views here.
@@ -16,6 +16,7 @@ class SlotListCreateView(generics.ListCreateAPIView):
         print('coign herereee...')
         serializer = self.get_serializer(data=request.data)
         print('coign herereee...')
+        print(request.data)
         serializer.is_valid(raise_exception=True)
         print('coign herereee...')
         slots = serializer.save() 
@@ -37,3 +38,8 @@ class SlotFilterView(generics.ListAPIView):
             return Slots.objects.filter(user=user, start_date=selected_date)
         else:
             return Slots.objects.none()
+
+class BookingView(viewsets.ModelViewSet):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    
