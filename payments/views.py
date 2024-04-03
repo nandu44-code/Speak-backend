@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .serializers import BookingSerializer
 from rest_framework.response import Response
 from django.conf import settings
 from rest_framework.decorators import api_view
@@ -23,7 +24,14 @@ def create_checkout_session(request):
     if request.method == 'POST':
         try:
             print("create checkout session.......")
-            # Create a Checkout Session
+
+            serializer = BookingSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            booking_data = serializer.validated_data
+            
+            user_id = booking_data.get('user_id')
+            slot_id = booking_data.get('slot_id')
+
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
             
@@ -43,6 +51,10 @@ def create_checkout_session(request):
                 billing_address_collection= 'required',
                 success_url='http://localhost:5173/student/paymentSuccess',
                 cancel_url='http://localhost:5173/student/profile',
+                metadata={
+                    'user_id':user_id,
+                    'slot_id':slot_id,
+                }
             )
             return Response({'id': checkout_session.id})
         except Exception as e:
