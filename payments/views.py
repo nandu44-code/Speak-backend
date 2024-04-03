@@ -26,30 +26,22 @@ def create_checkout_session(request):
             # Create a Checkout Session
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
-                # billing_details={
-                #     "name": "nandu",
-                #     "email":"nandu.ganesh.nair@gmail.com",
-                #     "phone":"+919805464357",
-                #     "address": {
-                #     "line1": "123 Main St",
-                #     "city": "Thalassery",
-                #     "state": "Kerala",
-                #     "postal_code": "670741",
-                #     "country": "IN",
-                #     },
-                # },
+            
                 line_items=[{
                     'price_data': {
                         'currency': 'inr',
                         'product_data': {
-                            'name': 'Slot Booking',
+                            'name': 'SLOTS AVAILABLE',
+                            "description": "Book a slot for your private session now. ",
+                            "images" : ["http://localhost:8000/media/Images/pexels-pixabay-159866.jpg"]
                         },
                         'unit_amount': 250000,
                     },
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url='http://localhost:5173',
+                billing_address_collection= 'required',
+                success_url='http://localhost:5173/student/paymentSuccess',
                 cancel_url='http://localhost:5173/student/profile',
             )
             return Response({'id': checkout_session.id})
