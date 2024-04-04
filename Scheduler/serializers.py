@@ -46,6 +46,7 @@ class SlotSerializer(serializers.ModelSerializer):
         return Slots.objects.bulk_create(slots)
 
 class SlotFilterSerializer(serializers.ModelSerializer):
+    print('slot filter serializer')
     class Meta:
         model = Slots
         fields = '__all__'

@@ -32,7 +32,7 @@ class SlotFilterView(generics.ListAPIView):
 
 
     def get_queryset(self):
-        user = self.request.query_params.get('user')
+        user = self.request.query_params.get('created_by')
         print(user)
         selected_date = self.request.query_params.get('selected_date')
         print(selected_date)

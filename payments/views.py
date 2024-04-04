@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from Scheduler.models import Booking
 from .serializers import BookingSerializer
 from rest_framework.response import Response
 from django.conf import settings
@@ -29,8 +30,10 @@ def create_checkout_session(request):
             serializer.is_valid(raise_exception=True)
             booking_data = serializer.validated_data
             
-            user_id = booking_data.get('user_id')
-            slot_id = booking_data.get('slot_id')
+            user_id = booking_data.get('booked_by')
+            slot_id = booking_data.get('slot')
+
+            booking =Booking.objects.create(booked_by=user_id, slot=slot_id)
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -60,3 +63,49 @@ def create_checkout_session(request):
         except Exception as e:
             return Response({'error': str(e)}, status=400)
 
+@api_view(['POST'])
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe.api_key
+        )
+    except ValueError as e:
+        # Invalid payload
+        return Response({'error': str(e)}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return Response({'error': str(e)}, status=400)
+
+    # Handle the event
+    if event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']
+        # Process the payment_intent here
+        handle_payment_intent_succeeded(payment_intent)
+
+    return Response({'success': True})
+
+def handle_payment_intent_succeeded(payment_intent):
+    # Extract payment-related information
+    print('handling payment success')
+    amount = payment_intent['amount']
+    currency = payment_intent['currency']
+    customer_email = payment_intent['charges']['data'][0]['billing_details']['email']
+    
+    # Extract metadata
+    metadata = payment_intent['metadata']
+    slot_id = metadata.get('slot_id')
+    user_id = metadata.get('user_id')
+    
+    # Save the information to your database
+    # For example, create a new Booking model instance
+    Booking.objects.create(
+        amount=amount,
+        currency=currency,
+        slot=slot_id,
+        booked_by=user_id,
+
+    )
