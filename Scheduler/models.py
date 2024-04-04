@@ -10,6 +10,7 @@ class Slots(models.Model):
     end_time = models.TimeField()
     
 class Booking(models.Model):
+    # id = models.AutoField(primary_key=True)
     slot = models.OneToOneField(Slots, on_delete=models.CASCADE, primary_key=True)
     booked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     booking_time = models.DateTimeField(auto_now_add=True)

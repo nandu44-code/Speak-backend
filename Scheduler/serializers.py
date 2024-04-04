@@ -56,3 +56,13 @@ class BookingSerializer(serializers.ModelSerializer):
         model = Booking
         fields = '__all__'
 
+class BookingSerializerStudent(serializers.ModelSerializer):
+    slots_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Booking
+        fields = ['slot', 'booked_by', 'booking_time', 'status', 'amount', 'currency', 'slots_data']
+
+    def get_slots_data(self, obj):
+        slots = SlotSerializer(obj.slot).data
+        return slots

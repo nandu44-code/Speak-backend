@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import request
 from rest_framework import generics,status,viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Slots,Booking
-from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer
+from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer,BookingSerializerStudent
 from dateutil.rrule import rrulestr
 import datetime
 # Create your views here.
@@ -54,6 +55,7 @@ class BookingView(viewsets.ModelViewSet):
 def GetBookings(request, tutor, status):
     print('get_bookings',tutor,status)
     try:
+        print('entering in to the try block')
         bookings = Booking.objects.filter(slot__created_by_id=tutor, status=status)
         print('number of bookings',bookings.count())
         serializer = BookingSerializer(bookings, many=True)
@@ -61,3 +63,26 @@ def GetBookings(request, tutor, status):
         return Response(serializer.data)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+
+@api_view(['GET'])
+def GetBookingsStudent(request, user,status):
+    print("entering here")
+    try:
+        bookings = Booking.objects.filter(booked_by=user, status=status)
+        print('number of bookings',bookings.count())
+        serializer = BookingSerializerStudent(bookings, many=True)
+
+        return Response(serializer.data)
+    except:
+        return Response({"error":str(e)}, status=400)
+
+class BookingDeleteView(APIView):
+    def delete(self, request, slot, format=None):
+        print("coming here,,")
+        try:
+            print(slot)
+            booking = Booking.objects.get(pk=slot)
+            booking.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Booking.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
