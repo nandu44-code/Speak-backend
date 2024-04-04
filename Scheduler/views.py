@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import request
 from rest_framework import generics,status,viewsets
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Slots,Booking
 from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer
@@ -49,3 +50,14 @@ class BookingView(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     
+@api_view(['GET'])
+def GetBookings(request, tutor, status):
+    print('get_bookings',tutor,status)
+    try:
+        bookings = Booking.objects.filter(slot__created_by_id=tutor, status=status)
+        print('number of bookings',bookings.count())
+        serializer = BookingSerializer(bookings, many=True)
+        
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
