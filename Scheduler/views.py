@@ -5,9 +5,11 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Slots,Booking
-from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer,BookingSerializerStudent
+from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer,BookingSerializerStudent,BookingSerializerAdmin
 from dateutil.rrule import rrulestr
 import datetime
+from django.db.models import Prefetch
+
 # Create your views here.
 
 class SlotListCreateView(generics.ListCreateAPIView):
@@ -32,7 +34,6 @@ class SlotDetailView(generics.RetrieveUpdateDestroyAPIView):
 class SlotFilterView(generics.ListAPIView):
     serializer_class = SlotFilterSerializer
 
-
     def get_queryset(self):
         user = self.request.query_params.get('created_by')
         print(user)
@@ -51,13 +52,28 @@ class BookingView(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     
+# @api_view(['GET'])
+# def GetBookings(request, tutor, status):
+#     print('get_bookings',tutor,status)
+#     try:
+#         print('entering in to the try block')
+#         bookings = Booking.objects.filter(slot__created_by_id=tutor, status=status)
+#         print('number of bookings',bookings.count())
+#         serializer = BookingSerializer(bookings, many=True)
+        
+#         return Response(serializer.data)
+#     except Exception as e:
+#         return Response({'error': str(e)}, status=400)
+
 @api_view(['GET'])
 def GetBookings(request, tutor, status):
-    print('get_bookings',tutor,status)
+    print('get_bookings', tutor, status)
     try:
         print('entering in to the try block')
-        bookings = Booking.objects.filter(slot__created_by_id=tutor, status=status)
-        print('number of bookings',bookings.count())
+        bookings = Booking.objects.filter(status=status).prefetch_related(
+            Prefetch('slot', queryset=Slots.objects.filter(created_by_id=tutor))
+        )
+        print('number of bookings', bookings.count())
         serializer = BookingSerializer(bookings, many=True)
         
         return Response(serializer.data)
@@ -68,13 +84,13 @@ def GetBookings(request, tutor, status):
 def GetBookingsStudent(request, user,status):
     print("entering here")
     try:
-        bookings = Booking.objects.filter(booked_by=user, status=status)
+        bookings = Booking.objects.filter(booked_by_id=user, status=status)
         print('number of bookings',bookings.count())
         serializer = BookingSerializerStudent(bookings, many=True)
 
         return Response(serializer.data)
     except:
-        return Response({"error":str(e)}, status=400)
+        return Response({"error"}, status=400)
 
 class BookingDeleteView(APIView):
     def delete(self, request, slot, format=None):
@@ -86,3 +102,12 @@ class BookingDeleteView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Booking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_all_bookings(request):
+    try:
+        bookings = Booking.objects.all()
+        serializer = BookingSerializerAdmin(bookings, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)

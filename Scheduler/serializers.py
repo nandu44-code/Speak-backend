@@ -6,7 +6,7 @@ from datetime import timedelta , datetime
 class SlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Slots
-        fields = ('id','created_by', 'start_date', 'end_date', 'start_time', 'end_time')
+        fields = ['id','created_by', 'start_date', 'end_date', 'start_time', 'end_time']
 
     def validate(self, attrs):
         start_date = attrs.get('start_date')
@@ -66,3 +66,10 @@ class BookingSerializerStudent(serializers.ModelSerializer):
     def get_slots_data(self, obj):
         slots = SlotSerializer(obj.slot).data
         return slots
+
+class BookingSerializerAdmin(serializers.ModelSerializer):
+
+    slot_details = SlotSerializer(source='slot', read_only=True)  # Include slot details in booking serializer
+    class Meta:
+        model = Booking
+        fields = ['slot', 'booked_by', 'booking_time', 'status', 'amount', 'currency', 'slot_details']

@@ -8,6 +8,7 @@ class Slots(models.Model):
     end_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    is_booked = models.BooleanField(default=False)
     
 class Booking(models.Model):
     # id = models.AutoField(primary_key=True)
