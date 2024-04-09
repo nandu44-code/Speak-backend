@@ -33,7 +33,7 @@ def create_checkout_session(request):
             user_id = booking_data.get('booked_by')
             slot_id = booking_data.get('slot')
 
-            booking =Booking.objects.create(booked_by=user_id, slot=slot_id)
+            # booking =Booking.objects.create(booked_by=user_id, slot=slot_id)
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -65,19 +65,24 @@ def create_checkout_session(request):
 
 @api_view(['POST'])
 def stripe_webhook(request):
+    print('webhook')
+    # print('Received webhook request:', request.body)
+    # print('Received headers:', request.headers)
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
-
+    print(stripe.api_key)
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, stripe.api_key
         )
     except ValueError as e:
         # Invalid payload
+        print('valueerror')
         return Response({'error': str(e)}, status=400)
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature
+        print('signatureVerificationError')
         return Response({'error': str(e)}, status=400)
 
     # Handle the event

@@ -46,7 +46,7 @@ class SlotSerializer(serializers.ModelSerializer):
         return Slots.objects.bulk_create(slots)
 
 class SlotFilterSerializer(serializers.ModelSerializer):
-    print('slot filter serializer')
+    # print('slot filter serializer')
     class Meta:
         model = Slots
         fields = '__all__'
@@ -69,7 +69,7 @@ class BookingSerializerStudent(serializers.ModelSerializer):
 
 class BookingSerializerAdmin(serializers.ModelSerializer):
 
-    slot_details = SlotSerializer(source='slot', read_only=True)  # Include slot details in booking serializer
+    slot_details = SlotSerializer(source='slot', read_only=True)
     class Meta:
         model = Booking
         fields = ['slot', 'booked_by', 'booking_time', 'status', 'amount', 'currency', 'slot_details']

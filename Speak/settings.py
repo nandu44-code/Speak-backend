@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 
@@ -180,10 +180,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nanduganeshnair4444@gmail.com'
 EMAIL_HOST_PASSWORD = 'easp xxqi lfzr kayf' 
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # or 'django.contrib.sessions.backends.cache' or other backends
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 1209600
 SESSION_SAVE_EVERY_REQUEST = True
 
 #payment secret key
 
 STRIPE_SECRET_KEY = "sk_test_51OzPCTSBJxztjkDCZRg3QbcBs7C5KRwbkztLLHUrg8oH4VBkTSEcq0byXi3OgtxFWm4vfsaNpjKDbTjWJveUBQ04003m1ELK0H"
+
+#celery configuration
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'

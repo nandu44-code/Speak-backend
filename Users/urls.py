@@ -2,7 +2,7 @@ from django.urls import (
     path,
     include
     )
-
+from . import views
 from .views import (
     UserViewSet,
     UserRegistrationViewSet,
@@ -34,6 +34,6 @@ urlpatterns = [
     path('tutors/', TutorListView.as_view(), name='tutor_list'),
     path('validate-otp/', UserRegistrationViewSet.as_view({'post': 'validate_otp'}), name='validate-otp'),
     path('change-password/', UserViewSet.as_view({'post': 'change_password'}), name='user-change-password'),
-    path('tutor-search/', SearchTutorView.as_view(), name='search')
+    path('tutor-search/', SearchTutorView.as_view(), name='search'),
           
 ]

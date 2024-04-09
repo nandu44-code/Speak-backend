@@ -17,8 +17,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes,action
-from .utils import generate_otp
-from .tasks import send_otp
+from .utils import generate_otp,send_otp
+from .tasks import send_otp_task
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view
 
 @permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
@@ -39,6 +44,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# @receiver(post_save, sender=CustomUser)
+# def send_otp_on_user_creation(sender, instance, created, **kwargs):
+#     print('signals')
+#     if created:
+#         print('signals2')
+#         otp = generate_otp()
+#         instance.otp = otp
+#         instance.save()
+#         send_otp_task.delay(instance.email, otp)
+
 class UserRegistrationViewSet(viewsets.ModelViewSet):
 
     queryset = CustomUser.objects.none() 
@@ -48,20 +63,15 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()    
-        try:
-            otp = generate_otp()
-            print(otp,"otp from create function")
-            user.otp=otp
-            user.save()
-        except exception as e:
-            print(e)
 
+        otp = generate_otp()
+        user.otp =otp
+        user.save()
+        print(otp,'otp', user.email,'email')
         send_otp(user.email, otp)
-        request.session['useremail'] = user.email
-        request.session.save()
-        print(request.session['useremail'])
-        print('items in session',request.session.items())
+        
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     
 
     def validate_otp(self,request,*args,**kwargs):
@@ -98,7 +108,7 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
         except:
 
             return Response ({'Detail':'Invalid OTP'}, status= status.HTTP_400_BAD_REQUEST)
-
+    
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

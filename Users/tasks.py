@@ -1,11 +1,7 @@
-from django.core.mail import send_mail
-from django.conf import settings
+from celery import shared_task
+from .utils import send_otp
 
-def send_otp(email,otp):
-    subject = "Your OTP for registration at speak"
-    message = f"Your otp is {otp}"
-    from_email = settings.EMAIL_HOST_USER
-    recipient_list = [ email ]   
-
-    send_mail(subject, message, from_email, recipient_list)
-    
+@shared_task
+def send_otp_task(email, otp):
+    print('celery','send_otp_task')
+    send_otp(email, otp)
