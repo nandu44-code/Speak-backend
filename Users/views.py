@@ -1,6 +1,6 @@
 from rest_framework import viewsets,permissions, status
 from rest_framework.views import APIView
-from rest_framework import generics,filters
+from rest_framework import generics,filters,pagination
 from rest_framework.response import Response
 from .models import CustomUser,Tutor
 from .serializers import (UserRegistrationSerializer,
@@ -25,10 +25,11 @@ from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.decorators import api_view
 
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()  
+    queryset = CustomUser.objects.filter(is_student=True)  
     serializer_class = UserSerializer
+    pagination_class = pagination.PageNumberPagination
 
     @action(detail=False, methods=['post'])
     def change_password(self, request):
@@ -160,3 +161,9 @@ class SearchTutorView(generics.ListAPIView):
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['username' , 'first_name', 'last_name'] 
+
+# class GetTutors(APIView):
+#     def get(self,request):
+#         users=CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True,tutor__isnull=False)
+#         for user in users:
+            
