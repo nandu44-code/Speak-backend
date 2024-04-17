@@ -51,7 +51,7 @@ class CombinedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'profile_image', 'last_name', 'first_name', 'tutor']
+        fields = ['id', 'username', 'email', 'profile_image', 'last_name', 'first_name', 'is_active', 'tutor']
 
 
 class OtpValidationSerializer(serializers.Serializer):
