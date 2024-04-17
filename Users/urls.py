@@ -10,7 +10,8 @@ from .views import (
     TutorInfoViewSet,
     CustomUserTutorDetailView,
     TutorListView,
-    SearchTutorView
+    SearchTutorView,
+    SearchUserView,
     )
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -35,5 +36,6 @@ urlpatterns = [
     path('validate-otp/', UserRegistrationViewSet.as_view({'post': 'validate_otp'}), name='validate-otp'),
     path('change-password/', UserViewSet.as_view({'post': 'change_password'}), name='user-change-password'),
     path('tutor-search/', SearchTutorView.as_view(), name='search'),
+    path('user-search/', SearchUserView.as_view(), name='search-user'),
           
 ]

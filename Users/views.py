@@ -25,7 +25,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.decorators import api_view
 
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.filter(is_student=True)  
     serializer_class = UserSerializer
@@ -45,15 +45,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# @receiver(post_save, sender=CustomUser)
-# def send_otp_on_user_creation(sender, instance, created, **kwargs):
-#     print('signals')
-#     if created:
-#         print('signals2')
-#         otp = generate_otp()
-#         instance.otp = otp
-#         instance.save()
-#         send_otp_task.delay(instance.email, otp)
+class SearchUserView(generics.ListAPIView):
+    print('this is the search user view ')
+    queryset = CustomUser.objects.filter(is_student=True)
+    serializer_class = UserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username' , 'first_name', 'last_name'] 
+
 
 class UserRegistrationViewSet(viewsets.ModelViewSet):
 
@@ -158,6 +156,7 @@ class TutorListView(APIView):
 
 class SearchTutorView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
+    print(queryset)
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['username' , 'first_name', 'last_name'] 
