@@ -67,9 +67,24 @@ class BookingSerializerStudent(serializers.ModelSerializer):
         slots = SlotSerializer(obj.slot).data
         return slots
 
-class BookingSerializerAdmin(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'email')  # Add any other fields you want to include
 
-    slot_details = SlotSerializer(source='slot', read_only=True)
+class SlotsSerializer(serializers.ModelSerializer):
+    created_by = CustomUserSerializer(read_only=True)
+
+    class Meta:
+        model = Slots
+        fields = '__all__'
+
+class BookingSerializerAdmin(serializers.ModelSerializer):
+    slot_details = SlotsSerializer(source='slot', read_only=True)
+    booked_by_details = CustomUserSerializer(source='booked_by', read_only=True)
+
     class Meta:
         model = Booking
-        fields = ['slot', 'booked_by', 'booking_time', 'status', 'amount', 'currency', 'slot_details']
+        fields = ['slot', 'booked_by', 'booked_by_details', 'booking_time', 'status', 'amount', 'currency', 'slot_details']
+
+        

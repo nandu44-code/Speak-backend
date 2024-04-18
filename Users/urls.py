@@ -5,6 +5,8 @@ from django.urls import (
 from . import views
 from .views import (
     UserViewSet,
+    TutorViewSet,
+    TutorRequestsViewSet,
     UserRegistrationViewSet,
     CustomTokenObtainPairView,
     TutorInfoViewSet,
@@ -13,6 +15,7 @@ from .views import (
     SearchTutorView,
     SearchUserView,
     )
+    
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -21,6 +24,8 @@ from rest_framework_simplejwt.views import (
 
 router = DefaultRouter()
 router.register('users', UserViewSet)
+router.register('tutorlist',TutorViewSet)
+router.register('requests',TutorRequestsViewSet)
 # router.register('register', UserRegistrationViewSet, basename='register')
 router.register('tutor/register', TutorInfoViewSet, basename='tutor/register')
 
