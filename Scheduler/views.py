@@ -65,20 +65,52 @@ class BookingView(viewsets.ModelViewSet):
 #     except Exception as e:
 #         return Response({'error': str(e)}, status=400)
 
-@api_view(['GET'])
-def GetBookings(request, tutor, status):
-    print('get_bookings', tutor, status)
-    try:
-        print('entering in to the try block')
-        bookings = Booking.objects.filter(status=status).prefetch_related(
-            Prefetch('slot', queryset=Slots.objects.filter(created_by_id=tutor))
-        )
-        print('number of bookings', bookings.count())
-        serializer = BookingSerializer(bookings, many=True)
+# @api_view(['GET'])
+# def GetBookings(request, tutor, status):
+#     print('get_bookings', tutor, status)
+#     try:
+#         print('entering in to the try block')
+#         bookings = Slots.objects.filter(
+#             created_by_id=tutor, 
+#             booking__status= status, 
+#             booking__isnull=False
+#         ).select_related('booking')
         
-        return Response(serializer.data)
-    except Exception as e:
-        return Response({'error': str(e)}, status=400)
+#         if not bookings.exists():
+#             print('no bookings found here')
+#             return Response({'message': 'No bookings found'}, status=404)
+
+#         print('number of bookings', bookings.count())
+#         try:
+#             serialized_data = BookingSerializerAdmin(bookings, many=True).data
+#             print(serialized_data)
+#             return Response(serialized_data)
+#         except Exception as e:
+#             print(f"Error in serialization: {e}")
+#             traceback.print_exc()  # Print the traceback
+#             return Response({'error': 'Error in serialization'}, status=400)
+        
+#         return Response(serializer.data)
+#     except Exception as e:
+#         return Response({'error': str(e)}, status=400)
+
+class SlotsBookingViewSet(viewsets.ViewSet):
+    def list(self, request):
+        try:
+            tutor = request.query_params.get('tutor')
+            status = request.query_params.get('status')
+            
+            print('tutor',tutor, 'status', status)
+            slots = Slots.objects.filter(created_by=tutor)
+            bookings = Booking.objects.filter(slot__in=slots)
+
+            if status:
+                bookings = bookings.filter(status=status)
+            print(bookings)
+            serializer = BookingSerializerAdmin(bookings, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=400)
 
 @api_view(['GET'])
 def GetBookingsStudent(request, user,status):
@@ -97,7 +129,8 @@ class BookingDeleteView(APIView):
         print("coming here,,")
         try:
             print(slot)
-            booking = Booking.objects.get(pk=slot)
+            booking = Booking.objects.get(slot=slot)
+            print(booking)
             booking.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Booking.DoesNotExist:

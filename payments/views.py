@@ -21,7 +21,6 @@ def test_payment(request):
     payment_method_types=['card'],
     receipt_email='test@example.com')
     return Response(status=status.HTTP_200_OK, data=test_payment_intent)
-
 @api_view(['POST'])
 def create_checkout_session(request):
     if request.method == 'POST':
@@ -29,48 +28,48 @@ def create_checkout_session(request):
             print("create checkout session.......")
 
             serializer = BookingSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
+            print('serializer is working properly ')
+            
+            if not serializer.is_valid():
+                print(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            print('serializer is validated properly')
             booking_data = serializer.validated_data
             
             user_id = booking_data.get('booked_by').id
             slot_id = booking_data.get('slot').id
 
-            # booking =Booking.objects.create(booked_by=user_id, slot=slot_id)
-
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
-            
                 line_items=[{
                     'price_data': {
                         'currency': 'inr',
                         'product_data': {
                             'name': 'SLOTS AVAILABLE',
-                            "description": "Book a slot for your private session now. ",
-                            "images" : ["http://localhost:8000/media/Images/pexels-pixabay-159866.jpg"]
+                            'description': 'Book a slot for your private session now.',
+                            'images': ['http://localhost:8000/media/Images/pexels-pixabay-159866.jpg']
                         },
                         'unit_amount': 250000,
                     },
                     'quantity': 1,
                 }],
                 mode='payment',
-                billing_address_collection= 'required',
+                billing_address_collection='required',
                 success_url='http://localhost:5173/student/paymentSuccess',
                 cancel_url='http://localhost:5173/student/profile',
-                # metadata={
-                #     'user_id':user_id,
-                #     'slot_id':slot_id,
-                # },
-
-            payment_intent_data={
-            'metadata': {
-            'user_id': user_id,
-            'slot_id': slot_id,
-        }
-    }
+                payment_intent_data={
+                    'metadata': {
+                        'user_id': user_id,
+                        'slot_id': slot_id,
+                    }
+                }
             )
             return Response({'id': checkout_session.id})
+        
         except Exception as e:
-            return Response({'error': str(e)}, status=400)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def stripe_webhook(request):
@@ -88,7 +87,7 @@ def stripe_webhook(request):
         )
     except ValueError as e:
         # Invalid payload
-        print('valueerror')
+        print('value error')
         return Response({'error': str(e)}, status=400)
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature

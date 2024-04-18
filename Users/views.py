@@ -163,6 +163,7 @@ class TutorListView(APIView):
         return Response(serializer.data)
 
 class SearchTutorView(generics.ListAPIView):
+    print('this is seratch tutor view')
     queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
     print(queryset)
     serializer_class = CombinedUserSerializer

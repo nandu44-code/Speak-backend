@@ -87,4 +87,10 @@ class BookingSerializerAdmin(serializers.ModelSerializer):
         model = Booking
         fields = ['slot', 'booked_by', 'booked_by_details', 'booking_time', 'status', 'amount', 'currency', 'slot_details']
 
-        
+# class BookingSerializerAdmin(serializers.ModelSerializer):
+#     slot_details = SlotsSerializer(read_only=True)
+#     booked_by_details = CustomUserSerializer(read_only=True)
+
+#     class Meta:
+#         model = Booking
+#         fields = ['slot', 'booked_by', 'booked_by_details', 'booking_time', 'status', 'amount', 'currency', 'slot_details']
