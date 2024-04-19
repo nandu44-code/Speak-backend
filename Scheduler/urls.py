@@ -15,7 +15,7 @@ urlpatterns = [
     # path('bookings/filter/<int:tutor>/<str:status>', GetBookings),
     path('student/bookings/filter/<int:user>/<str:status>', GetBookingsStudent),
     path('booking/<int:slot>/delete/', BookingDeleteView.as_view(), name='booking-delete'),
-    path('bookings/all/', get_all_bookings, name='get_all_bookings')
+    path('bookings-all/', get_all_bookings, name='get_all_bookings')
 ]
 
 

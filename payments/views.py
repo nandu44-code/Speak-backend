@@ -117,6 +117,9 @@ def handle_payment_intent_succeeded(payment_intent):
     print(slot_id)
     print(user_id)
     slot_instance = Slots.objects.get(id=slot_id)
+    if slot_instance:
+        slot_instance.is_booked = True
+        slot_instance.save()
     user_instance = CustomUser.objects.get(id=user_id)
     # Save the information to your database
     # For example, create a new Booking model instance

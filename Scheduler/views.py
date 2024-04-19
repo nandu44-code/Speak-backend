@@ -123,12 +123,27 @@ def GetBookingsStudent(request, user,status):
         return Response(serializer.data)
     except:
         return Response({"error"}, status=400)
+@api_view(['GET'])
+def GetBookingsStudent(request, user,status):
+    print("entering here")
+    try:
+        bookings = Booking.objects.filter(booked_by_id=user, status=status)
+        print('number of bookings',bookings.count())
+        serializer = BookingSerializerAdmin(bookings, many=True)
+
+        return Response(serializer.data)
+    except:
+        return Response({"error"}, status=400)
 
 class BookingDeleteView(APIView):
     def delete(self, request, slot, format=None):
         print("coming here,,")
         try:
             print(slot)
+            slots=Slots.objects.get(id=slot)
+            if slots:
+                slots.is_booked=False
+                slots.save()
             booking = Booking.objects.get(slot=slot)
             print(booking)
             booking.delete()
@@ -141,6 +156,7 @@ def get_all_bookings(request):
     # paginator = paginationPageNumberPagination()
     try:
         bookings = Booking.objects.all()
+        print(bookings.count,'bookings-count')
         serializer = BookingSerializerAdmin(bookings, many=True)
         return Response(serializer.data)
     except Exception as e:
