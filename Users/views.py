@@ -25,7 +25,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.decorators import api_view
 
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.filter(is_student=True)  
     serializer_class = UserSerializer
