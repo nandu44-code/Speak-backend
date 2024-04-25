@@ -49,8 +49,6 @@ class TutorViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.filter(is_tutor=True)
     serializer_class = UserSerializer
 
-
-
 class SearchUserView(generics.ListAPIView):
     print('this is the search user view ')
     queryset = CustomUser.objects.filter(is_student=True)
@@ -176,9 +174,10 @@ class SearchTutorView(generics.ListAPIView):
 #         for user in users:
             
 class TutorRequestsViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.filter(is_approved=False,is_verified=True,is_tutor=True,is_rejected=False)
+    queryset = CustomUser.objects.filter(is_approved=False,is_verified=True,is_tutor=True,is_rejected=False,tutor__isnull=False)
     serializer_class = UserSerializer
     
     def get_queryset(self):
 
-        return CustomUser.objects.filter(tutor__isnull=False).distinct()
+        return CustomUser.objects.filter(is_approved=False,is_verified=True,is_tutor=True,is_rejected=False,tutor__isnull=False).distinct()
+

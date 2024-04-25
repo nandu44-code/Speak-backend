@@ -3,7 +3,7 @@ from .views import SlotListCreateView,SlotFilterView,SlotDetailView,BookingView,
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'bookings', BookingView)
+router.register(r'booking-view', BookingView)
 router.register(r'bookings-listing', SlotsBookingViewSet, basename='bookings')
 
 
