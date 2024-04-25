@@ -65,3 +65,10 @@ class Tutor(models.Model):
     certificates = models.TextField(blank=True)
     is_approved = models.BooleanField(default=False)
     
+class Wallet(models.Model):
+    wallet_id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    balance = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+
