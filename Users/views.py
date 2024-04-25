@@ -2,13 +2,14 @@ from rest_framework import viewsets,permissions, status
 from rest_framework.views import APIView
 from rest_framework import generics,filters,pagination
 from rest_framework.response import Response
-from .models import CustomUser,Tutor
+from .models import CustomUser,Tutor,Wallet
 from .serializers import (UserRegistrationSerializer,
                           UserSerializer,
                           TutorInfoSerializer,
                           CombinedUserSerializer,
                           OtpValidationSerializer,
-                          ChangePasswordSerializer
+                          ChangePasswordSerializer,
+                          WalletSerializer
                         )
 from django.db.models import Q
 from rest_framework.response import Response
@@ -181,3 +182,6 @@ class TutorRequestsViewSet(viewsets.ModelViewSet):
 
         return CustomUser.objects.filter(is_approved=False,is_verified=True,is_tutor=True,is_rejected=False,tutor__isnull=False).distinct()
 
+class WalletViewSet(viewsets.ModelViewSet):
+    queryset= Wallet.objects.all()
+    serializer_class = WalletSerializer

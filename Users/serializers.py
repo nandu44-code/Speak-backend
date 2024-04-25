@@ -1,4 +1,4 @@
-from .models import CustomUser,Tutor
+from .models import CustomUser,Tutor,Wallet
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -60,3 +60,8 @@ class OtpValidationSerializer(serializers.Serializer):
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required = True)
     
+
+class WalletSerializer(serializers.Serializer):
+    class Meta:
+        model= Wallet
+        fields = '__all__'
