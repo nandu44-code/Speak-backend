@@ -59,7 +59,7 @@ class Tutor(models.Model):
     user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     state = models.CharField(max_length=45)
     country = models.CharField(max_length=45)
-    dialect = models.CharField(max_length=45,default=False)
+    dialect = models.CharField(max_length=45,default=None)
     introduction_video = models.URLField(blank=True)
     introduction_description = models.CharField(max_length=250)
     teaching_style = models.CharField(max_length=100)
