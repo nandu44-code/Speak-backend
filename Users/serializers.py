@@ -40,7 +40,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-class TutorInfoSerializer(serializers.ModelSerializer):
+class   TutorInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tutor

@@ -155,11 +155,14 @@ class CustomUserTutorDetailView(APIView):
             return Response({"message": "User not found"}, status=404)
 
 class TutorListView(APIView):
+    pagination_class = pagination.PageNumberPagination
     def get(self, request):
         users = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
-        serializer = CombinedUserSerializer(users, many=True)
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(users, request)
+        serializer = CombinedUserSerializer(result_page, many=True)
 
-        return Response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
 
 class SearchTutorView(generics.ListAPIView):
     print('this is seratch tutor view')
@@ -168,6 +171,14 @@ class SearchTutorView(generics.ListAPIView):
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['username' , 'first_name', 'last_name'] 
+
+class FilterTutorView(generics.ListAPIView):
+    print('this is filter tutor view')
+    queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
+    print(queryset)
+    serializer_class = CombinedUserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['dialect'] 
 
 # class GetTutors(APIView):
 #     def get(self,request):
