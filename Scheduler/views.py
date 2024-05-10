@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Slots,Booking
+from Users.models import Wallet
 from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer,BookingSerializerStudent,BookingSerializerAdmin
 from dateutil.rrule import rrulestr
 import datetime
@@ -154,15 +155,26 @@ class BookingDeleteView(APIView):
 class BookingCancelView(APIView):
     def patch(self, reqeust, slot, format=None):
         print('booking cancellation view is here')
-
         try:
-            slots = Slots.object.get(id=slot)
+            slots = Slots.objects.get(id=slot)
             if slots:
                 slots.is_booked=False
                 slots.save()
             booking = Booking.objects.get(slot=slot)
-            boooking.status ='cancelled'
+            booking.status ='cancelled'
             booking.save()
+
+            user = booking.booked_by
+
+            wallet, created = Wallet.objects.get_or_create(user=user)
+            
+            if created:
+                wallet.balance=2500
+            else:
+                wallet.balance+=2500
+
+            wallet.save()
+
             return Response(status=status.HTTP_200_OK)
         except Booking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)

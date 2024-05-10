@@ -69,7 +69,7 @@ class Tutor(models.Model):
 class Wallet(models.Model):
     wallet_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    balance = models.IntegerField()
+    balance = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     
 
