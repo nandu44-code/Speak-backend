@@ -192,3 +192,4 @@ class TutorRequestsViewSet(viewsets.ModelViewSet):
 class WalletViewSet(viewsets.ModelViewSet):
     queryset= Wallet.objects.all()
     serializer_class = WalletSerializer
+

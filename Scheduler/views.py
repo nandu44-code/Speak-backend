@@ -151,6 +151,22 @@ class BookingDeleteView(APIView):
         except Booking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class BookingCancelView(APIView):
+    def patch(self, reqeust, slot, format=None):
+        print('booking cancellation view is here')
+
+        try:
+            slots = Slots.object.get(id=slot)
+            if slots:
+                slots.is_booked=False
+                slots.save()
+            booking = Booking.objects.get(slot=slot)
+            boooking.status ='cancelled'
+            booking.save()
+            return Response(status=status.HTTP_200_OK)
+        except Booking.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['GET'])
 def get_all_bookings(request):
     # paginator = paginationPageNumberPagination()
