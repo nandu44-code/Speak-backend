@@ -14,7 +14,9 @@ from .views import (
     TutorListView,
     SearchTutorView,
     SearchUserView,
-    FilterTutorView
+    FilterTutorView,
+    WalletViewSet,
+    WalletByUserAPIView
     )
     
 from rest_framework.routers import DefaultRouter
@@ -29,7 +31,7 @@ router.register('tutorlist',TutorViewSet)
 router.register('requests',TutorRequestsViewSet)
 # router.register('register', UserRegistrationViewSet, basename='register')
 router.register('tutor/register', TutorInfoViewSet, basename='tutor/register')
-
+# router.register('wallet', WalletViewSet)
 
 
 urlpatterns = [
@@ -44,4 +46,5 @@ urlpatterns = [
     path('tutor-search/', SearchTutorView.as_view(), name='search-tutor'),
     path('tutor-filter/', FilterTutorView.as_view(), name='filter-tutor'),
     path('user-search/', SearchUserView.as_view(), name='search-user'),
+    path('user-wallet/<int:user_id>/', WalletByUserAPIView.as_view(), name='wallet_by_user')
 ]

@@ -61,7 +61,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(required = True)
     
 
-class WalletSerializer(serializers.Serializer):
+class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         model= Wallet
         fields = '__all__'

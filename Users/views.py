@@ -193,3 +193,15 @@ class WalletViewSet(viewsets.ModelViewSet):
     queryset= Wallet.objects.all()
     serializer_class = WalletSerializer
 
+class WalletByUserAPIView(APIView):
+    def get(self, request, user_id):
+        try:
+            print(user_id)
+            wallet = Wallet.objects.get(user=user_id)
+            serializer = WalletSerializer(wallet)
+            print(wallet)
+            print('hi')
+            print(serializer.data)
+            return Response(serializer.data)
+        except Wallet.DoesNotExist:
+            return Response({"message": "Wallet not found for the given user ID"}, status=status.HTTP_404_NOT_FOUND)
