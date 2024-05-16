@@ -1,6 +1,7 @@
 from django.db import models
 from dateutil.rrule import rrulestr  # Import rrulestr
 from Users.models import CustomUser
+import uuid
 
 class Slots(models.Model): 
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='tutor_slots')
@@ -18,3 +19,4 @@ class Booking(models.Model):
     status = models.CharField(max_length=20, choices=[('pending', 'Pending'),('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')], default='pending')
     amount = models.IntegerField(default=0)
     currency = models.CharField(max_length=10,default='None')
+    room_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
