@@ -85,7 +85,7 @@ class BookingSerializerAdmin(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['slot', 'booked_by', 'booked_by_details', 'booking_time', 'status', 'amount', 'currency', 'slot_details']
+        fields = ['slot', 'booked_by', 'booked_by_details', 'booking_time', 'status', 'amount', 'currency', 'slot_details','room_id']
 
 # class BookingSerializerAdmin(serializers.ModelSerializer):
 #     slot_details = SlotsSerializer(read_only=True)
