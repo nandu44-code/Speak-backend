@@ -8,7 +8,8 @@ from .views import (
                     BookingDeleteView,
                     get_all_bookings,
                     SlotsBookingViewSet,
-                    BookingCancelView
+                    BookingCancelView,
+                    BookingCreateView
                     )
 from rest_framework.routers import DefaultRouter
 
@@ -26,7 +27,9 @@ urlpatterns = [
     path('student/bookings/filter/<int:user>/<str:status>', GetBookingsStudent),
     path('booking/<int:slot>/delete/', BookingDeleteView.as_view(), name='booking-delete'),
     path('booking/<int:slot>/cancel/', BookingCancelView.as_view(), name='booking-delete'),
-    path('bookings-all/', get_all_bookings, name='get_all_bookings')
+    path('bookings-all/', get_all_bookings, name='get_all_bookings'),
+    path('bookings/create/', BookingCreateView.as_view(), name='create-booking'),
+
 ]
 
 

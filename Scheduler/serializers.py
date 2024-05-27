@@ -46,7 +46,6 @@ class SlotSerializer(serializers.ModelSerializer):
         return Slots.objects.bulk_create(slots)
 
 class SlotFilterSerializer(serializers.ModelSerializer):
-    # print('slot filter serializer')
     class Meta:
         model = Slots
         fields = '__all__'
@@ -70,7 +69,7 @@ class BookingSerializerStudent(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email')  # Add any other fields you want to include
+        fields = ('id', 'username', 'email' , 'first_name' , 'last_name')  # Add any other fields you want to include
 
 class SlotsSerializer(serializers.ModelSerializer):
     created_by = CustomUserSerializer(read_only=True)

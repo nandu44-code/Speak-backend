@@ -189,3 +189,21 @@ def get_all_bookings(request):
         return Response(serializer.data)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+
+class BookingCreateView(APIView):
+    def post(self, request, format=None):
+        serializer = BookingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            user = request.user
+            slot_id = request.query_params.get('slot')
+            slot=Slots.objects.filter(id=slot_id)
+            slot.is_booked = True
+            slot.save()
+            wallet = Wallet.objects.get(user=user)
+            amount_to_deduct = serializer.validated_data['amount']
+            if wallet.balance >= amount_to_deduct:
+                wallet.balance -= amount_to_deduct
+                wallet.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

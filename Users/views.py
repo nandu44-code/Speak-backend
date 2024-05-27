@@ -19,7 +19,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes,action
 from .utils import generate_otp,send_otp
-from .tasks import send_otp_task
+# from .tasks import send_otp_task
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
