@@ -65,6 +65,7 @@ class Tutor(models.Model):
     teaching_style = models.CharField(max_length=100)
     certificates = models.TextField(blank=True)
     is_approved = models.BooleanField(default=False)
+    student_preferences = models.CharField(max_length=200,default='No Preferences')
     
 class Wallet(models.Model):
     wallet_id = models.AutoField(primary_key=True)
