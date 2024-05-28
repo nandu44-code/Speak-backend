@@ -35,6 +35,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
+    def validate_username(self,value):
+
+        if CustomUser.objects.filter(username=value).exists():
+            return serializers.ValidationError('username Already exists')
+        return value
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
         return user
