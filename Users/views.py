@@ -65,17 +65,23 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
 
     def create(self,request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()    
+        if request.data['username']:
+            username= request.data['username']
+            print(username)
+            if CustomUser.objects.filter(username=username).exists():
+                return Response({'error':'username is already exists'},status.HTTP_404_NOT_FOUND)
+        if serializer.is_valid():
+            user = serializer.save()    
 
-        otp = generate_otp()
-        user.otp =otp
-        user.save()
-        print(otp,'otp', user.email,'email')
-        send_otp(user.email, otp)
+            otp = generate_otp()
+            user.otp =otp
+            user.save()
+            print(otp,'otp', user.email,'email')
+            send_otp(user.email, otp)
         
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print('hi serialiizer eroor is here')
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
     def validate_otp(self,request,*args,**kwargs):
