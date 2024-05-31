@@ -211,3 +211,19 @@ class WalletByUserAPIView(APIView):
             return Response(serializer.data)
         except Wallet.DoesNotExist:
             return Response({"message": "Wallet not found for the given user ID"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def users_count(request):
+
+    try:
+        total_users = CustomUser.objects.exclude(is_superuser=True).count()
+        total_tutors = CustomUser.objects.filter(is_tutor=True).count()
+        total_students = CustomUser.objects.filter(is_student=True).count()
+        
+        return Response({
+            'total_users': total_users,
+            'total_tutors': total_tutors,
+            'total_students': total_students
+        }, status=200)
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
