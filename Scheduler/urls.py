@@ -10,7 +10,8 @@ from .views import (
                     SlotsBookingViewSet,
                     BookingCancelView,
                     BookingCreateView,
-                    get_all_bookings_count
+                    get_all_bookings_count,
+                    get_all_slots_count
                     )
 from rest_framework.routers import DefaultRouter
 
@@ -31,6 +32,7 @@ urlpatterns = [
     path('bookings-all/', get_all_bookings, name='get_all_bookings'),
     path('bookings/create/', BookingCreateView.as_view(), name='create-booking'),
     path('bookings-count/', get_all_bookings_count, name="booking-count"),
+    path('slots-count/<int:tutor>/', get_all_slots_count, name='slots-count')
 
 ]
 

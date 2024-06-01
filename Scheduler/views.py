@@ -221,3 +221,17 @@ def get_all_bookings_count(request):
         })
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+
+@api_view(['GET'])
+def get_all_slots_count(request,tutor):
+    try:
+        user = CustomUser.objects.filter(id=tutor)
+        print(tutor,'id')
+        print(user,'user')
+        slots_count = Slots.objects.filter(created_by=id).count()
+
+        return Response({
+            'slots_count':slots_count
+        })
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
