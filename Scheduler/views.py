@@ -207,3 +207,17 @@ class BookingCreateView(APIView):
                 wallet.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_all_bookings_count(request):
+    try:
+        pending_bookings = Booking.objects.filter(status="pending").count()
+        confirmed_bookings = Booking.objects.filter(status="confirmed").count()
+        completed_bookings = Booking.objects.filter(status="completed").count()
+        return Response({
+            'pending_bookings':pending_bookings,
+            'confirmed_bookings':confirmed_bookings,
+            'completed_bookings':completed_bookings
+        })
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
