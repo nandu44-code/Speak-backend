@@ -82,6 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Speak.wsgi.application'
+ASGI_APPLICATION = 'Speak.asgi.application'
 
 
 # Database
