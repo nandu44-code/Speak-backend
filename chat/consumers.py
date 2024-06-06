@@ -11,7 +11,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.sender_id = self.scope['url_route']['kwargs']['sender_id']
         self.receiver_id = self.scope['url_route']['kwargs']['receiver_id']
-        self.room_group_name = f'chat_{self.receiver_id}'
+        if self.sender_id and self.receiver_id and self.sender_id > self.receiver_id:
+            self.room_group_name = f'chat_{self.receiver_id}_{self.sender_id}'
+        else:
+            self.room_group_name = f'chat_{self.sender_id}_{self.receiver_id}'
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -20,7 +23,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code): 
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -41,7 +44,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             # Send the message to the receiver's group
             await self.channel_layer.group_send(
-                f'chat_{self.receiver_id}',
+                self.room_group_name,
                 {
                     'type': 'chat_message',
                     'message': message,
@@ -57,7 +60,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         sender_id = event['sender']
-
+        print(f'Message received in room {self.room_group_name}: {message} from {sender_id}')
         await self.send(text_data=json.dumps({
             'message': message,
             'sender': sender_id
