@@ -227,3 +227,19 @@ def users_count(request):
         }, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+
+
+class SearchUserTutorView(generics.ListAPIView):
+    print('this is the search user view ')
+    # queryset = CustomUser.objects.filter(is_superuser=False,is_active=True,is_verified=True,is_rejected=False)
+    # print(queryset)
+    serializer_class = UserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username' , 'first_name', 'last_name'] 
+    pagination_class = None
+    def get_queryset(self):
+        queryset = CustomUser.objects.filter(is_superuser=False, is_active=True,is_verified=True)
+
+        search_params = self.request.query_params.get('query')
+        print(f'Search Parameters: {search_params}')  # Debugging search parameters
+        return queryset

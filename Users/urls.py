@@ -18,6 +18,7 @@ from .views import (
     WalletViewSet,
     WalletByUserAPIView,
     users_count,
+    SearchUserTutorView,
     )
     
 from rest_framework.routers import DefaultRouter
@@ -48,5 +49,6 @@ urlpatterns = [
     path('tutor-filter/', FilterTutorView.as_view(), name='filter-tutor'),
     path('user-search/', SearchUserView.as_view(), name='search-user'),
     path('user-wallet/<int:user_id>/', WalletByUserAPIView.as_view(), name='wallet_by_user'),
-    path('user-count/', users_count, name='user-count')
+    path('user-count/', users_count, name='user-count'),
+    path('chat-search/', SearchUserTutorView.as_view(), name='search-user-tutor'),
 ]

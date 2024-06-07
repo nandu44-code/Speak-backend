@@ -17,7 +17,7 @@ class MessageList(generics.ListAPIView):
         if sender_id and receiver_id:
             queryset1 = Message.objects.filter(sender=sender_id,receiver=receiver_id)
             queryset2 = Message.objects.filter(sender=receiver_id, receiver=sender_id)
-            
+
             queryset = queryset1.union(queryset2)
 
             return queryset.order_by('timestamp')
@@ -42,7 +42,6 @@ class ChatRecieversList(generics.ListAPIView):
                 print(messages)
                 chat_receivers = messages.values_list('sender_id' , flat=True).distinct()
                 queryset = CustomUser.objects.filter(id__in = chat_receivers)
-
 
         else:
             queryset = None
