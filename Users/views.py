@@ -182,13 +182,17 @@ class FilterTutorView(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['tutor__dialect'] 
 
+class FilterTutorPreferenceView(generics.ListAPIView):
+    queryset = CustomUser.objects.filter(is_approved=True, is_tutor=True, is_verified=True, is_active=True)
+    serializer_class = CombinedUserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['tutor__student_preferences']  # Ensure this field path is correct
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        search_term = self.request.query_params.get('search', None)
-        if search_term:
-            print(f'Search term: {search_term}')
-            queryset = queryset.filter(Q(tutor__dialect__icontains=search_term))
+        student_preference = self.request.query_params.get('search', None)
+        if student_preference:
+            queryset = queryset.filter(tutor__student_preferences__contains=[student_preference])
         return queryset
 
 # class GetTutors(APIView):

@@ -19,6 +19,7 @@ from .views import (
     WalletByUserAPIView,
     users_count,
     SearchUserTutorView,
+    FilterTutorPreferenceView,
     )
     
 from rest_framework.routers import DefaultRouter
@@ -47,6 +48,7 @@ urlpatterns = [
     path('change-password/', UserViewSet.as_view({'post': 'change_password'}), name='user-change-password'),
     path('tutor-search/', SearchTutorView.as_view(), name='search-tutor'),
     path('tutor-filter/', FilterTutorView.as_view(), name='filter-tutor'),
+    path('tutor-filter-preference/', FilterTutorPreferenceView.as_view(), name='filter-tutor'),
     path('user-search/', SearchUserView.as_view(), name='search-user'),
     path('user-wallet/<int:user_id>/', WalletByUserAPIView.as_view(), name='wallet_by_user'),
     path('user-count/', users_count, name='user-count'),
