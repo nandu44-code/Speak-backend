@@ -180,7 +180,16 @@ class FilterTutorView(generics.ListAPIView):
     print(queryset)
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['dialect'] 
+    search_fields = ['tutor__dialect'] 
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_term = self.request.query_params.get('search', None)
+        if search_term:
+            print(f'Search term: {search_term}')
+            queryset = queryset.filter(Q(tutor__dialect__icontains=search_term))
+        return queryset
 
 # class GetTutors(APIView):
 #     def get(self,request):
