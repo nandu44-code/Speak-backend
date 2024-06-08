@@ -10,7 +10,7 @@ User = get_user_model()
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.sender_id = self.scope['url_route']['kwargs']['sender_id']
-        self.receiver_id = self.scope['url_route']['kwargs']['receiver_id']
+        self.receiver_id = self.scope['url_route']['kwargs']['receiver_id'] 
         if self.sender_id and self.receiver_id and self.sender_id > self.receiver_id:
             self.room_group_name = f'chat_{self.receiver_id}_{self.sender_id}'
         else:

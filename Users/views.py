@@ -46,6 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class TutorViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.filter(is_tutor=True)
     serializer_class = UserSerializer
@@ -105,18 +106,14 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
             print(type(otp_to_check))
             user = CustomUser.objects.get( otp = otp_to_check)
             print(user.otp)
-            print('1')
             user.otp = 0
-            print('2')
-
-            user.is_verified = True
-            print('3')
-            user.save()
-            print('4')
-
+            if user.is_verified != True:
+                user.is_verified = True
+                user.save()
+            else:
+                pass
             return Response({'Detail':'otp verification successful'}, status=status.HTTP_201_CREATED)
         except:
-
             return Response ({'Detail':'Invalid OTP'}, status= status.HTTP_400_BAD_REQUEST)
     
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -256,3 +253,25 @@ class SearchUserTutorView(generics.ListAPIView):
         search_params = self.request.query_params.get('query')
         print(f'Search Parameters: {search_params}')  # Debugging search parameters
         return queryset
+
+@api_view(['POST'])
+def forgot_password(request):
+    
+    if request.data.get('email'):
+        email = request.data.get('email')
+        print(email)
+        user = CustomUser.objects.get(email=email)
+
+        if user is not None:
+            otp = generate_otp()
+            user.otp =otp
+            user.save()
+            send_otp(user.email,otp)
+            return Response({"success" :"otp send succesfully"}, status = status.HTTP_200_OK)
+
+        else:
+            return Response({"error" :"user is not found"}, status = status.HTTP_404_NOT_FOUND)
+
+    else:
+        return Response({"error":"sometthing went wrong"}, status = status.HTTP_400_BAD_REQUEST)
+    
