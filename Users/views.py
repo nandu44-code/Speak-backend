@@ -227,13 +227,21 @@ def users_count(request):
 
     try:
         total_users = CustomUser.objects.exclude(is_superuser=True).count()
-        total_tutors = CustomUser.objects.filter(is_tutor=True).count()
-        total_students = CustomUser.objects.filter(is_student=True).count()
+        total_tutors = CustomUser.objects.filter(is_tutor=True,is_active=True).count()
+        total_students = CustomUser.objects.filter(is_student=True,is_active=True).count()
         
+        total_blocked_users = CustomUser.objects.filter(is_active=False).count()
+        total_blocked_tutors = CustomUser.objects.filter(is_active=False,is_tutor=True).count()
+        total_blocked_students = CustomUser.objects.filter(is_active=False,is_student=True).count()
+
+
         return Response({
             'total_users': total_users,
             'total_tutors': total_tutors,
-            'total_students': total_students
+            'total_students': total_students,
+            'total_blocked_users': total_blocked_users,
+            'total_blocked_tutors':total_blocked_tutors,
+            'total_blocked_students': total_blocked_students
         }, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
@@ -255,7 +263,7 @@ class SearchUserTutorView(generics.ListAPIView):
         return queryset
 
 @api_view(['POST'])
-def forgot_password(request):
+def forgot_password_otp(request):
     
     if request.data.get('email'):
         email = request.data.get('email')

@@ -12,7 +12,6 @@ import os
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe_webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
-# class StripeCheckoutView
 @api_view(['POST'])
 def test_payment(request):
     print('heiii')

@@ -10,6 +10,7 @@ from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer,B
 from dateutil.rrule import rrulestr
 import datetime
 from django.db.models import Prefetch
+from Users.models import CustomUser
 
 # Create your views here.
 
@@ -174,7 +175,7 @@ class BookingCancelView(APIView):
                 wallet.balance+=2500
 
             wallet.save()
-
+            booking.delete()
             return Response(status=status.HTTP_200_OK)
         except Booking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -196,8 +197,10 @@ class BookingCreateView(APIView):
         if serializer.is_valid():
             serializer.save()
             user = request.user
-            slot_id = request.query_params.get('slot')
-            slot=Slots.objects.filter(id=slot_id)
+            print(user)
+            slot_id = request.data['slot']
+            slot=Slots.objects.get(id=slot_id)
+            print(slot)
             slot.is_booked = True
             slot.save()
             wallet = Wallet.objects.get(user=user)
@@ -206,6 +209,7 @@ class BookingCreateView(APIView):
                 wallet.balance -= amount_to_deduct
                 wallet.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors,'serializer.errors')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
@@ -225,10 +229,10 @@ def get_all_bookings_count(request):
 @api_view(['GET'])
 def get_all_slots_count(request,tutor):
     try:
-        user = CustomUser.objects.filter(id=tutor)
+        user = CustomUser.objects.get(id=tutor)
         print(tutor,'id')
         print(user,'user')
-        slots_count = Slots.objects.filter(created_by=id).count()
+        slots_count = Slots.objects.filter(created_by=user.id).count()
 
         return Response({
             'slots_count':slots_count

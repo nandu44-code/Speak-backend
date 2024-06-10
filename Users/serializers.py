@@ -1,6 +1,7 @@
 from .models import CustomUser,Tutor,Wallet
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group
 from rest_framework_simplejwt.tokens import RefreshToken
 # from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
@@ -21,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
         
     def partial_update(self, instance, validated_data):
         print('updatinggg')
-        password = validated_data.get('password')
+        password = validated_data.get('password')   
         if 'password' in validated_data:
 
             print('password is in validated data')
@@ -31,20 +32,23 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
+
     class Meta:
         model = CustomUser
         fields = '__all__'
 
-    def validate_username(self,value):
+    def validate_username(self, value):
         if CustomUser.objects.filter(username=value).exists():
             print('username already exists')
             raise serializers.ValidationError('username Already exists')
         return value
 
     def create(self, validated_data):
+        groups = validated_data.pop('groups', [])
         user = CustomUser.objects.create_user(**validated_data)
+        user.groups.set(groups)  # Use set() to assign groups
         return user
-
 
 class   TutorInfoSerializer(serializers.ModelSerializer):
 
