@@ -233,12 +233,9 @@ def get_all_slots_count(request,tutor):
         print(tutor,'id')
         print(user,'user')
         slots_count = Slots.objects.filter(created_by=user.id).count()
-    #    booked_slots = slots.objects.filter(created_by=user.id, is_booked=True).count()
-
     
         return Response({
             'slots_count': slots_count,
-            # 'booked_slots': booked_slots,
         })
     except Exception as e:
         return Response({'error': str(e)}, status=400)
