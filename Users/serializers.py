@@ -51,7 +51,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             return token
         else:
             raise Exception('User is not verified')
-            
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
@@ -101,4 +101,4 @@ class WalletSerializer(serializers.ModelSerializer):
 class WalletHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = WalletHistory
-        fields = ['id', 'wallet', 'user', 'amount', 'transaction_type', 'created_at']
+        fields = ['id', 'wallet', 'user', 'amount', 'created_at']

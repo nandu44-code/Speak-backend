@@ -75,7 +75,7 @@ class BookingSerializer(serializers.ModelSerializer):
         if instance.status != 'confirmed' and new_status == 'confirmed':
             slot_creator = instance.slot.created_by
             wallet, created = Wallet.objects.get_or_create(user=slot_creator)
-            wallet.balance += (30/100)*(instance.amount)
+            wallet.balance += 1000
             wallet.save()
 
             WalletHistory.objects.create(

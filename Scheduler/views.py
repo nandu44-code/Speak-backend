@@ -10,7 +10,7 @@ from .serializers import SlotSerializer,SlotFilterSerializer,BookingSerializer,B
 from dateutil.rrule import rrulestr
 import datetime
 from django.db.models import Prefetch
-from Users.models import CustomUser
+from Users.models import CustomUser,Wallet,WalletHistory
 
 # Create your views here.
 
@@ -158,8 +158,6 @@ class BookingCancelView(APIView):
                 slots.is_booked=False
                 slots.save()
             booking = Booking.objects.get(slot=slot)
-            booking.status ='cancelled'
-            booking.save()
 
             user = booking.booked_by
 

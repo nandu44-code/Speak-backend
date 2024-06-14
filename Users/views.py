@@ -2,7 +2,7 @@ from rest_framework import viewsets,permissions, status
 from rest_framework.views import APIView
 from rest_framework import generics,filters,pagination
 from rest_framework.response import Response
-from .models import CustomUser,Tutor,Wallet
+from .models import CustomUser,Tutor,Wallet,WalletHistory
 from .serializers import (UserRegistrationSerializer,
                           UserSerializer,
                           CustomTokenObtainPairSerializer,
