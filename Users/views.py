@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import CustomUser,Tutor,Wallet
 from .serializers import (UserRegistrationSerializer,
                           UserSerializer,
+                          CustomTokenObtainPairSerializer,
                           TutorInfoSerializer,
                           CombinedUserSerializer,
                           OtpValidationSerializer,
@@ -16,7 +17,6 @@ from django.db.models import Q
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes,action
 from .utils import generate_otp,send_otp
@@ -117,27 +117,7 @@ class UserRegistrationViewSet(viewsets.ModelViewSet):
         except:
             return Response ({'Detail':'Invalid OTP'}, status= status.HTTP_400_BAD_REQUEST)
     
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        if user.is_verified:
 
-            token = super().get_token(user)
-            token["user"] = user.id
-            token["is_tutor"] = user.is_tutor
-            token["is_student"] = user.is_student
-            token["is_superuser"] = user.is_superuser
-            token["is_approved"] = user.is_approved
-            token["is_rejected"] = user.is_rejected
-            if user.is_tutor:
-                try:
-                    tutor = Tutor.objects.get(user=user)
-                    token["tutor"] = tutor.id
-                except:
-                    pass 
-            return token
-        else:
-            raise Exception('User is not verified')
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     
@@ -167,7 +147,6 @@ class TutorListView(APIView):
 class SearchTutorView(generics.ListAPIView):
     print('this is seratch tutor view')
     queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
-    print(queryset)
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['username' , 'first_name', 'last_name'] 
@@ -175,7 +154,6 @@ class SearchTutorView(generics.ListAPIView):
 class FilterTutorView(generics.ListAPIView):
     print('this is filter tutor view')
     queryset = CustomUser.objects.filter(is_approved=True,is_tutor=True,is_verified=True,is_active=True)
-    print(queryset)
     serializer_class = CombinedUserSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['tutor__dialect'] 

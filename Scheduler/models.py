@@ -12,8 +12,7 @@ class Slots(models.Model):
     is_booked = models.BooleanField(default=False)
     
 class Booking(models.Model):
-    # id = models.AutoField(primary_key=True)
-    slot = models.OneToOneField(Slots, on_delete=models.CASCADE, primary_key=True)
+    slot = models.ForeignKey(Slots, on_delete=models.CASCADE)
     booked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     booking_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[('pending', 'Pending'),('confirmed', 'Confirmed'), ('cancelled', 'Cancelled'),('completed','Completed')], default='pending')

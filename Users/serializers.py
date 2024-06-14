@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 from rest_framework_simplejwt.tokens import RefreshToken
-# from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -30,6 +30,28 @@ class UserSerializer(serializers.ModelSerializer):
       
         return super().update(instance, validated_data)
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        if user.is_verified:
+
+            token = super().get_token(user)
+            token["user"] = user.id
+            token["is_tutor"] = user.is_tutor
+            token["is_student"] = user.is_student
+            token["is_superuser"] = user.is_superuser
+            token["is_approved"] = user.is_approved
+            token["is_rejected"] = user.is_rejected
+            if user.is_tutor:
+                try:
+                    tutor = Tutor.objects.get(user=user)
+                    token["tutor"] = tutor.id
+                except:
+                    pass 
+            return token
+        else:
+            raise Exception('User is not verified')
+            
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
