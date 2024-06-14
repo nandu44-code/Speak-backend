@@ -73,3 +73,8 @@ class Wallet(models.Model):
     balance = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     
+class WalletHistory(models.Model):
+    wallet = models.ForeignKey(Wallet,on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser,on_delete = models.CASCADE)
+    amount = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add =True)

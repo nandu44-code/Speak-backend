@@ -9,7 +9,8 @@ from .serializers import (UserRegistrationSerializer,
                           CombinedUserSerializer,
                           OtpValidationSerializer,
                           ChangePasswordSerializer,
-                          WalletSerializer
+                          WalletSerializer,
+                          WalletHistorySerializer
                         )
 from django.db.models import Q
 from rest_framework.response import Response
@@ -283,3 +284,11 @@ def forgot_password_otp(request):
     else:
         return Response({"error":"sometthing went wrong"}, status = status.HTTP_400_BAD_REQUEST)
     
+
+class WalletHistoryListView(generics.ListAPIView):
+    serializer_class = WalletHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return WalletHistory.objects.filter(user=user).order_by('-created_at')

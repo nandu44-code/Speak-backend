@@ -21,6 +21,7 @@ from .views import (
     SearchUserTutorView,
     FilterTutorPreferenceView,
     forgot_password_otp,
+    WalletHistoryListView
     )
     
 from rest_framework.routers import DefaultRouter
@@ -53,5 +54,6 @@ urlpatterns = [
     path('user-count/', users_count, name='user-count'),
     path('chat-search/', SearchUserTutorView.as_view(), name='search-user-tutor'),
     path('forgot-password-otp/', forgot_password_otp, name='forgot-pass'),
+    path('wallet-history/', WalletHistoryListView.as_view(), name='wallet-history'),
 
 ]

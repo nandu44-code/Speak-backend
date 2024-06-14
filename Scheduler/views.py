@@ -168,13 +168,20 @@ class BookingCancelView(APIView):
             user = booking.booked_by
 
             wallet, created = Wallet.objects.get_or_create(user=user)
-            
-            if created:
-                wallet.balance=2500
-            else:
-                wallet.balance+=2500
+            refund_amount = 2500
 
+            if created:
+                wallet.balance=refund_amount
+            else:
+                wallet.balance+=refund_amount
             wallet.save()
+
+            WalletHistory.objects.create(
+                wallet=wallet,
+                user=user,
+                amount=refund_amount
+            )
+
             booking.delete()
             return Response(status=status.HTTP_200_OK)
         except Booking.DoesNotExist:
@@ -239,3 +246,4 @@ def get_all_slots_count(request,tutor):
         })
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+

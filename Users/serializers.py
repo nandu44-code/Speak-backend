@@ -1,4 +1,4 @@
-from .models import CustomUser,Tutor,Wallet
+from .models import CustomUser,Tutor,Wallet,WalletHistory
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
@@ -75,3 +75,8 @@ class WalletSerializer(serializers.ModelSerializer):
     class Meta:
         model= Wallet
         fields = '__all__'
+
+class WalletHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WalletHistory
+        fields = ['id', 'wallet', 'user', 'amount', 'transaction_type', 'created_at']

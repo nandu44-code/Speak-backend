@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Slots,Booking
-from Users.models import CustomUser,Wallet
+from Users.models import CustomUser,Wallet,WalletHistory
 from datetime import timedelta , datetime
 
 class SlotSerializer(serializers.ModelSerializer):
@@ -12,11 +12,9 @@ class SlotSerializer(serializers.ModelSerializer):
         start_date = attrs.get('start_date')
         end_date = attrs.get('end_date')
 
-        # Validate maximum of 5 days
         if (end_date - start_date).days > 5:
             raise serializers.ValidationError("Maximum 5 days are allowed.")
 
-        # Validate start time is before end time
         if attrs['start_time'] >= attrs['end_time']:
             raise serializers.ValidationError("Start time must be before end time.")
 
@@ -61,6 +59,12 @@ class BookingSerializer(serializers.ModelSerializer):
             wallet, created = Wallet.objects.get_or_create(user=slot_creator)
             wallet.balance += (30/100)*(instance.amount)
             wallet.save()
+
+            WalletHistory.objects.create(
+                wallet=wallet,
+                user=slot_creator,
+                amount=amount_to_add,
+            )
         
         instance.status = new_status
         instance.save()
