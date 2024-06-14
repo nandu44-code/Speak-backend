@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Slots,Booking
-from Users.models import CustomUser
+from Users.models import CustomUser,Wallet
 from datetime import timedelta , datetime
 
 class SlotSerializer(serializers.ModelSerializer):
@@ -54,6 +54,17 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = '__all__'
+    def update(self, instance, validated_data):
+        new_status = validated_data.get('status', instance.status)
+        if instance.status != 'confirmed' and new_status == 'confirmed':
+            slot_creator = instance.slot.created_by
+            wallet, created = Wallet.objects.get_or_create(user=slot_creator)
+            wallet.balance += instance.amount
+            wallet.save()
+        
+        instance.status = new_status
+        instance.save()
+        return instance
 
 class BookingSerializerStudent(serializers.ModelSerializer):
     slots_data = serializers.SerializerMethodField()
