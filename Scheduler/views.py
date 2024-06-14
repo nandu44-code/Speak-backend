@@ -19,12 +19,8 @@ class SlotListCreateView(generics.ListCreateAPIView):
     serializer_class = SlotSerializer
     
     def create(self, request, *args, **kwargs):
-        print('coign herereee...')
         serializer = self.get_serializer(data=request.data)
-        print('coign herereee...')
-        print(request.data)
         serializer.is_valid(raise_exception=True)
-        print('coign herereee...')
         slots = serializer.save() 
         headers = self.get_success_headers(slots)
         return Response(SlotSerializer(slots, many=True).data, status=status.HTTP_201_CREATED, headers=headers)

@@ -2,11 +2,12 @@ from rest_framework import serializers
 from .models import Slots,Booking
 from Users.models import CustomUser,Wallet,WalletHistory
 from datetime import timedelta , datetime
+from django.db.models import Q
 
 class SlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Slots
-        fields = ['id','created_by', 'start_date', 'end_date', 'start_time', 'end_time']
+        fields = ['id', 'created_by', 'start_date', 'end_date', 'start_time', 'end_time']
 
     def validate(self, attrs):
         start_date = attrs.get('start_date')
@@ -22,20 +23,37 @@ class SlotSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_id = validated_data.pop('created_by')
-        print(user_id)
-        user = CustomUser.objects.get(email=user_id)         
-        print(user)
+        user = CustomUser.objects.get(email=user_id)
+
+        start_date = validated_data['start_date']
+        end_date = validated_data['end_date']
+
+        existing_slots = Slots.objects.filter(
+            Q(created_by=user, start_date=start_date) |
+            Q(created_by=user, end_date=end_date)
+        )
+        
+        overlapping_slots = existing_slots.filter(
+            Q(start_time__lt=validated_data['end_time'], end_time__gt=validated_data['start_time']) |
+            Q(start_time__lte=validated_data['start_time'], end_time__gte=validated_data['end_time'])
+        )
+        print(overlapping_slots)
+        if overlapping_slots.exists():
+            print("overlapping exists")
+            raise serializers.ValidationError("Slots overlap with existing slots.")
+
+        # Create slots
         slots = []
-        current_date = validated_data['start_date']
-        while current_date <= validated_data['end_date']:
+        current_date = start_date
+        while current_date <= end_date:
             current_datetime = datetime.combine(current_date, validated_data['start_time'])
             while current_datetime.time() < validated_data['end_time']:
                 slot = Slots(
-                    created_by = user,
+                    created_by=user,
                     start_time=current_datetime.time(),
                     end_time=(current_datetime + timedelta(hours=1)).time(),
                     start_date=current_datetime.date(),
-                    end_date=current_datetime.date() + timedelta(days=1) if current_datetime.time() >= validated_data['end_time'] else current_date,  # Handle end_date logic for last slot
+                    end_date=current_datetime.date() + timedelta(days=1) if current_datetime.time() >= validated_data['end_time'] else current_date,
                 )
                 slots.append(slot)
                 current_datetime += timedelta(hours=1)
