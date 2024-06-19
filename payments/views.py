@@ -56,8 +56,8 @@ def create_checkout_session(request):
                 }],
                 mode='payment',
                 billing_address_collection='required',
-                success_url='http://localhost:5173/student/paymentSuccess',
-                cancel_url='http://localhost:5173/student/profile',
+                success_url='https://www.furnics.online/student/paymentSuccess',
+                cancel_url='https://www.furnics.online/student/profile',
                 payment_intent_data={
                     'metadata': {
                         'user_id': user_id,
