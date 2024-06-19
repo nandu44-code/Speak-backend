@@ -56,8 +56,8 @@ def create_checkout_session(request):
                 }],
                 mode='payment',
                 billing_address_collection='required',
-                success_url='https://www.furnics.online/student/paymentSuccess',
-                cancel_url='https://www.furnics.online/student/profile',
+                success_url='https://speak-frontend.vercel.app/student/paymentSuccess',
+                cancel_url='https://speak-frontend.vercel.app/student/profile',
                 payment_intent_data={
                     'metadata': {
                         'user_id': user_id,
