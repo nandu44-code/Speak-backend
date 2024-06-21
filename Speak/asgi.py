@@ -11,19 +11,18 @@ import os
 from django.urls import path
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from chat.consumers import ChatConsumer
 from django.core.asgi import get_asgi_application
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Ensure the settings module is specified
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Speak.settings')
 
-# Initialize Django ASGI application early to ensure the AppRegistry is populated correctly.
 django_asgi_app = get_asgi_application()
+
+from chat.consumers import ChatConsumer
+
 
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
