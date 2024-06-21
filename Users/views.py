@@ -179,7 +179,6 @@ class FilterTutorPreferenceView(generics.ListAPIView):
 class TutorRequestsViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.filter(is_approved=False,is_verified=True,is_tutor=True,is_rejected=False,tutor__isnull=False)
     serializer_class = UserSerializer
-    print(queryset)
     def get_queryset(self):
 
         return CustomUser.objects.filter(is_approved=False,is_verified=True,is_tutor=True,is_rejected=False,tutor__isnull=False).distinct()
