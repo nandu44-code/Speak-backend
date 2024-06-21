@@ -50,7 +50,6 @@ sqlparse==0.4.4
 stripe==8.8.0
 tornado==6.4
 Twisted==24.3.0
-twisted-iocpsupport==1.0.4
 txaio==23.1.1
 typing_extensions==4.9.0
 tzdata==2023.4
@@ -58,5 +57,4 @@ urllib3==2.2.1
 vine==5.1.0
 wcwidth==0.2.13
 zope.interface==6.4.post2
-nginx
 gunicorn
